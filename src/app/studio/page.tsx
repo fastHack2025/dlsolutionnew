@@ -1,33 +1,35 @@
-// src/app/studio/page.tsx
-'use client';
+'use client'
 
-import React, { useState } from 'react';
-import { generateUUID } from '@/utils/uuid';
+import { useState } from 'react'
+import { generateUUID } from '@/utils/uuid'
 
 export default function StudioPage() {
-  const [generatedId, setGeneratedId] = useState<string | null>(null);
+  const [templateId, setTemplateId] = useState('')
 
   const handleGenerate = () => {
-    const id = generateUUID();
-    setGeneratedId(id);
-    console.log("🧠 ID généré :", id);
-  };
+    const id = generateUUID()
+    setTemplateId(id)
+  }
 
   return (
-    <main className="p-6">
-      <h1 className="text-2xl font-bold mb-4">🎨 Studio IA – Génération de Template</h1>
-      <button
-        onClick={handleGenerate}
-        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-      >
-        Générer un Template IA
-      </button>
+    <div className="min-h-screen px-4 py-12 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white">
+      <div className="max-w-3xl mx-auto">
+        <h1 className="text-3xl font-bold mb-6">🧠 Studio IA - Génération de Template</h1>
 
-      {generatedId && (
-        <div className="mt-4 text-green-600">
-          <p>ID généré : <code>{generatedId}</code></p>
-        </div>
-      )}
-    </main>
-  );
+        <button
+          onClick={handleGenerate}
+          className="bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700 transition"
+        >
+          Générer un ID de template
+        </button>
+
+        {templateId && (
+          <div className="mt-6 p-4 bg-white dark:bg-gray-800 border rounded">
+            <p className="text-sm font-mono">🆔 ID généré :</p>
+            <code className="text-blue-500">{templateId}</code>
+          </div>
+        )}
+      </div>
+    </div>
+  )
 }
