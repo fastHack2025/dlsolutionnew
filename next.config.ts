@@ -1,8 +1,3 @@
-// next.config.ts
-import withTM from 'next-transpile-modules'
-
-const withUuidFix = withTM(['uuid']) // ✅ transpilation forcée de uuid
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
@@ -11,4 +6,4 @@ const nextConfig = {
   }
 }
 
-export default withUuidFix(nextConfig)
+export default nextConfig
