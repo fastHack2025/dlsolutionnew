@@ -1,13 +1,12 @@
 'use client'
 
 import { useState } from 'react'
-import { generateUUID } from '@/utils/uuid'
 
 export default function StudioPage() {
   const [templateId, setTemplateId] = useState('')
 
   const handleGenerate = () => {
-    const id = generateUUID()
+    const id = crypto.randomUUID() // ✅ built-in UUID sans dépendance
     setTemplateId(id)
   }
 
