@@ -1,4 +1,3 @@
-// ✅ FICHIER : src/app/api/alerts/route.ts
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import emailjs from '@emailjs/nodejs'
@@ -36,7 +35,9 @@ export async function GET(req: Request) {
     }, {})
 
     const seuil = 3
-    const plansAlertes = Object.entries(stats).filter(([_, count]) => count >= seuil)
+
+    // ✅ FIX ESLINT ici : suppression de `_` non utilisé
+    const plansAlertes = Object.entries(stats).filter(([, count]) => count >= seuil)
 
     if (plansAlertes.length === 0) {
       return NextResponse.json({ message: '✅ Aucune alerte détectée.' })
@@ -58,8 +59,18 @@ export async function GET(req: Request) {
       process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
     )
 
-    return NextResponse.json({ alert: true, plans: plansAlertes, emailStatus: emailResponse.status })
-  } catch (err) {
-    return NextResponse.json({ error: 'Erreur serveur', details: String(err) }, { status: 500 })
+    return NextResponse.json({
+      alert: true,
+      plans: plansAlertes,
+      emailStatus: emailResponse.status
+    })
+  } catch (err: unknown) {
+    return NextResponse.json(
+      {
+        error: 'Erreur serveur',
+        details: err instanceof Error ? err.message : String(err)
+      },
+      { status: 500 }
+    )
   }
 }

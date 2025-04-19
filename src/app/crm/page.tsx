@@ -1,8 +1,8 @@
+// ✅ src/app/crm/page.tsx
 'use client'
 
 import { useEffect, useState } from 'react'
 import { createClient } from '@supabase/supabase-js'
-import { useUser } from '@clerk/nextjs'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -19,7 +19,6 @@ interface Client {
 }
 
 export default function CRMPage() {
-  const { user } = useUser()
   const [clients, setClients] = useState<Client[]>([])
 
   useEffect(() => {

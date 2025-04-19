@@ -19,9 +19,14 @@ export default function PlanOrderForm({ plan }: { plan: string }) {
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    if (!name || !email || !user?.id) return toast.error('Champs manquants ou utilisateur non connecté')
+
+    if (!name || !email || !user?.id) {
+      toast.error('Champs manquants ou utilisateur non connecté')
+      return
+    }
+
     setLoading(true)
 
     const doc = new jsPDF()
@@ -36,7 +41,7 @@ export default function PlanOrderForm({ plan }: { plan: string }) {
     const pdfBlob = doc.output('blob')
     const reader = new FileReader()
 
-    reader.onload = async function () {
+    reader.onload = async () => {
       const base64PDF = (reader.result as string).split(',')[1]
 
       const templateParams = {
@@ -54,13 +59,13 @@ export default function PlanOrderForm({ plan }: { plan: string }) {
           templateParams,
           process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
         )
-      } catch (err) {
-        toast.error("Erreur EmailJS")
+      } catch (emailError) {
+        toast.error('Erreur EmailJS lors de l’envoi')
         setLoading(false)
         return
       }
 
-      const { error } = await supabase.from('plan_orders').insert({
+      const { error: supabaseError } = await supabase.from('plan_orders').insert({
         user_id: user.id,
         name,
         email,
@@ -68,8 +73,8 @@ export default function PlanOrderForm({ plan }: { plan: string }) {
         plan,
       })
 
-      if (error) {
-        toast.error('Erreur Supabase : ' + error.message)
+      if (supabaseError) {
+        toast.error('Erreur Supabase : ' + supabaseError.message)
       } else {
         toast.success('Souscription envoyée et sauvegardée ✅')
         setName('')
@@ -84,7 +89,10 @@ export default function PlanOrderForm({ plan }: { plan: string }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mt-10 text-left max-w-xl mx-auto">
+    <form
+      onSubmit={handleSubmit}
+      className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mt-10 text-left max-w-xl mx-auto"
+    >
       <h3 className="text-xl font-bold mb-4">Souscrire au plan : {plan}</h3>
       <div className="space-y-4">
         <div>
@@ -119,7 +127,7 @@ export default function PlanOrderForm({ plan }: { plan: string }) {
         <button
           type="submit"
           disabled={loading}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded"
+          className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded w-full"
         >
           {loading ? 'Envoi en cours...' : 'Envoyer ma demande'}
         </button>
