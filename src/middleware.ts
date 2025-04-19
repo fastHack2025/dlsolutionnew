@@ -1,10 +1,10 @@
-import { authMiddleware } from "@clerk/nextjs/server"
+import { authMiddleware } from "@clerk/nextjs"
 
 export default authMiddleware({
   publicRoutes: ["/", "/login", "/pricing"],
-  ignoredRoutes: ["/api/webhook/stripe"],
+  ignoredRoutes: ["/api/webhook/stripe"]
 })
 
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+  matcher: ["/((?!_next|.*\\..*).*)"]
 }
